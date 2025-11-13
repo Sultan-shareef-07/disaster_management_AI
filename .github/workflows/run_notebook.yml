@@ -1,0 +1,55 @@
+name: Run Colab Notebook (execute)
+
+# Runs on push to main (change branch if needed) and on manual dispatch
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  run-notebook:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      # prefer requirements.txt if present, otherwise install minimal tools
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt || true
+        fi
+        pip install nbformat nbconvert jupyter-client ipykernel matplotlib scikit-learn pandas joblib emoji
+
+    - name: Ensure kernel available
+      run: |
+        python -m ipykernel install --user --name=gh_action_env || true
+
+    - name: Execute notebook (nbconvert)
+      # change the path below if your notebook is in a different location
+      run: |
+        NOTEBOOK_PATH="disaster_management_ai_colab.ipynb"
+        OUTPUT_NOTEBOOK="outputs/executed-${{ github.run_id }}.ipynb"
+        mkdir -p outputs
+        # execute the notebook, store the executed notebook
+        jupyter nbconvert --to notebook --execute "$NOTEBOOK_PATH" --ExecutePreprocessor.timeout=600 --output "$OUTPUT_NOTEBOOK"
+        echo "Executed notebook saved to $OUTPUT_NOTEBOOK"
+
+    - name: List outputs
+      run: ls -la outputs || true
+
+    - name: Upload outputs as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: notebook-outputs
+        path: outputs
