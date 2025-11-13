@@ -240,26 +240,7 @@ A workflow (`.github/workflows/run_notebook.yml`) is included to execute the Col
 * **Flask or Streamlit not connecting** → ensure you run Flask first and that both run in the same environment. Use `http://127.0.0.1:5000` in dashboard if needed.
 * **CI failing because notebook cannot find CSVs** → commit `demo_data/*.csv` or modify notebook to create demo data programmatically.
 
----
 
-# What to include in your project PDF (copy-paste checklist)
 
-1. One-paragraph system overview (Edge → Cloud → AI → Alerts).
-2. Short AI module descriptions (Sensor IsolationForest; Social TF-IDF+LR).
-3. Classification report + confusion matrix (copy from training output).
-4. Table comparing threshold vs sensor-ML vs fusion (insert actual values).
-5. Streamlit screenshot (sensor chart + classified tweet).
-6. Plot of sensor time-series with anomaly windows shaded.
-7. Sample orchestrator log showing a fused alert JSON.
-
----
-
-# Want me to
-
-* generate the exact PDF paragraph and table (I can paste with placeholders), or
-* craft the `.gitignore` and concise `LICENSE` snippet, or
-* inspect your GitHub repo and tell what’s missing?
-
-Tell me which and I’ll produce it immediately.
 
 
